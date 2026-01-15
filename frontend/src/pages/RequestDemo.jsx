@@ -113,6 +113,10 @@ const RequestDemo = () => {
         ).then(() => {
           // Redirect to home page after alert
           navigate('/');
+          // Force scroll to top after navigation
+          setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'instant' });
+          }, 100);
         });
       }
     };

@@ -698,6 +698,11 @@ const App = () => {
           element.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       }, 100);
+    } else {
+      // Scroll to top when navigating to home page without hash
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      }, 150);
     }
   }, [location, navigate]);
 
