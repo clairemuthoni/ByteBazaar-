@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import CustomersCRM from "../assets/Customers&CRM.webp";
 import OrdersDelivery from "../assets/orders&delivery.png";
@@ -6,25 +6,28 @@ import ProductsInventory from "../assets/products&inventory.webp";
 import StaffTaskManagement from "../assets/staff&taskmanagement.png";
 import AnalyticsReports from "../assets/analytics&reports.png";
 import JobCardsRepairs from "../assets/jobcard&repairs.jpg";
+import logo2 from "../assets/logo2.png";
+import { showConfirmDialog } from "../utils/sweetAlerts";
 
-const Navbar = () => {
+const Navbar = ({ onGetStarted }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <nav className="sticky top-0 z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="flex-shrink-0 flex items-center gap-2">
-            <span className="material-icons text-primary text-3xl">shopping_cart</span>
-            <Link to="/" className="font-bold text-xl tracking-tight text-gray-900 dark:text-white">
+            <div className="flex-shrink-0 flex items-center gap-2">
+              <img src={logo2} alt="ByteBazaar Logo" className="h-12 w-auto" />
+            {/* <Link to="/" className="font-bold text-xl tracking-tight text-gray-900 dark:text-white">
               Byte<span className="text-primary">Bazaar</span>
-            </Link>
+            </Link> */}
           </div>
-          <div className="hidden md:flex space-x-8 items-center">
-            <Link className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium transition" to="/features">Features</Link>
-            <a className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium transition" href="/#why-us">Why Us</a>
-            <Link className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium transition" to="/contact-sales">Contact</Link>
-            <a className="bg-primary hover:bg-secondary text-white px-5 py-2.5 rounded-lg font-semibold transition shadow-md hover:shadow-lg" href="#get-started">Get Started</a>
+            <div className="hidden md:flex space-x-8 items-center">
+            <Link className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium transition" to="/">Home</Link>
+              <Link className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium transition" to="/features">Features</Link>
+            {/* <a className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium transition" href="/#why-us">Why Us</a> */}
+            <Link className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium transition" to="/contact-sales">Contact Us</Link>
+            <a className="bg-primary hover:bg-secondary text-white px-5 py-2.5 rounded-lg font-semibold transition shadow-md hover:shadow-lg cursor-pointer" onClick={onGetStarted}>Get Started</a>
           </div>
           <div className="md:hidden flex items-center">
             <button 
@@ -62,9 +65,11 @@ const Navbar = () => {
                 Contact
               </Link>
               <a 
-                className="bg-primary hover:bg-secondary text-white px-5 py-2.5 rounded-lg font-semibold transition shadow-md hover:shadow-lg text-center" 
-                href="#get-started"
-                onClick={() => setMobileMenuOpen(false)}
+                className="bg-primary hover:bg-secondary text-white px-5 py-2.5 rounded-lg font-semibold transition shadow-md hover:shadow-lg text-center cursor-pointer" 
+                onClick={(e) => {
+                  setMobileMenuOpen(false);
+                  onGetStarted(e);
+                }}
               >
                 Get Started
               </a>
@@ -106,7 +111,11 @@ const FeatureSection = ({ id, title, description, features, imageSrc, imageAlt, 
           <p className="text-lg text-gray-600 dark:text-gray-400">{description}</p>
           <ul className="space-y-4">
             {features.map((feature, index) => (
-              <li key={index} className="flex items-start gap-3">
+              <li 
+                key={index} 
+                id={`${id}-feature-${index + 1}`}
+                className="flex items-start gap-3 scroll-mt-20"
+              >
                 <span className="material-icons text-primary">check_circle</span>
                 <span className="text-gray-700 dark:text-gray-300">{feature}</span>
               </li>
@@ -140,13 +149,13 @@ const GetStartedSection = () => (
   </section>
 );
 
-const Footer = () => (
+const Footer = ({ onGetStarted }) => (
   <footer className="bg-white dark:bg-background-dark pt-16 pb-8 border-t border-gray-200 dark:border-gray-800">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
         <div className="space-y-4">
           <div className="flex items-center gap-2">
-            <span className="material-icons text-primary text-2xl">shopping_cart</span>
+            <img src={logo2} alt="ByteBazaar Logo" className="h-8 w-auto" />
             <span className="font-bold text-xl text-gray-900 dark:text-white">Byte<span className="text-primary">Bazaar</span></span>
           </div>
           <div className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
@@ -158,23 +167,22 @@ const Footer = () => (
         <div>
           <h3 className="font-bold text-gray-900 dark:text-white mb-4">Product / Solutions</h3>
           <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-            <li><a className="hover:text-primary transition" href="#">Customers & CRM</a></li>
-            <li><a className="hover:text-primary transition" href="#">Orders & Delivery</a></li>
-            <li><a className="hover:text-primary transition" href="#">Products & Inventory</a></li>
-            <li><a className="hover:text-primary transition" href="#">Staff & Task Management</a></li>
-            <li><a className="hover:text-primary transition" href="#">Analytics & Reports</a></li>
-            <li><a className="hover:text-primary transition" href="#">JobCard & Repairs</a></li>
+            <li><a className="hover:text-primary transition" href="#customers-crm">Customers & CRM</a></li>
+            <li><a className="hover:text-primary transition" href="#orders-delivery">Orders & Delivery</a></li>
+            <li><a className="hover:text-primary transition" href="#products-inventory">Products & Inventory</a></li>
+            <li><a className="hover:text-primary transition" href="#staff-task-management">Staff & Task Management</a></li>
+            <li><a className="hover:text-primary transition" href="#analytics-reports">Analytics & Reports</a></li>
+            <li><a className="hover:text-primary transition" href="#jobcards-repairs">JobCard & Repairs</a></li>
           </ul>
         </div>
         <div>
           <h3 className="font-bold text-gray-900 dark:text-white mb-4">Resources & Company</h3>
           <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-            <li><Link className="hover:text-primary transition" to="/#pricing">Pricing</Link></li>
-            <li><Link className="hover:text-primary transition" to="/#faq">FAQs</Link></li>
-            <li><a className="hover:text-primary transition" href="#">Resources / Blogs</a></li>
-            <li><a className="hover:text-primary transition" href="#">About ByteBazaar</a></li>
-            <li><a className="hover:text-primary transition" href="#">Contact Us</a></li>
-            <li><a className="hover:text-primary transition" href="#">Request a demo</a></li>
+            <li><a className="hover:text-primary transition" href="/#pricing">Pricing</a></li>
+            <li><a className="hover:text-primary transition" href="/#faq">FAQs</a></li>
+            <li><a className="hover:text-primary transition cursor-pointer" onClick={onGetStarted}>Get Started</a></li>
+            <li><Link className="hover:text-primary transition" to="/contact-sales">Contact Us</Link></li>
+            <li><Link className="hover:text-primary transition" to="/request-demo">Request a demo</Link></li>
           </ul>
         </div>
         <div>
@@ -195,8 +203,8 @@ const Footer = () => (
       <div className="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
         <p className="text-sm text-gray-500">2026 Byte Bazaar CRM. All rights reserved.</p>
         <div className="flex space-x-6 mt-4 md:mt-0 text-sm text-gray-500">
-          <a className="hover:text-primary transition" href="#">Privacy Policy</a>
-          <a className="hover:text-primary transition" href="#">Terms of Service</a>
+          <Link className="hover:text-primary transition" to="/privacy-policy">Privacy Policy</Link>
+          <Link className="hover:text-primary transition" to="/terms-of-service">Terms of Service</Link>
         </div>
       </div>
     </div>
@@ -204,6 +212,29 @@ const Footer = () => (
 );
 
 const Features = () => {
+  const handleGetStarted = (e) => {
+    e.preventDefault();
+    showConfirmDialog(
+      'Ready to Get Started?',
+      'You will be redirected to the ByteBazaar login page',
+      'Continue',
+      'Not yet'
+    ).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = 'https://bytebazaar.ma3.co.ke/Login';
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (window.location.hash) {
+      const el = document.querySelector(window.location.hash);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  }, []);
+
   const features = [
     {
       id: "customers-crm",
@@ -292,7 +323,7 @@ const Features = () => {
 
   return (
     <div className="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-body transition-colors duration-200">
-      <Navbar />
+      <Navbar onGetStarted={handleGetStarted} />
       <HeroSection />
       <div className="space-y-24 pt-20">
         {features.map((feature, index) => (
@@ -310,7 +341,7 @@ const Features = () => {
         ))}
       </div>
       <GetStartedSection />
-      <Footer />
+      <Footer onGetStarted={handleGetStarted} />
     </div>
   );
 };

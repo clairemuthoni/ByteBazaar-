@@ -6,6 +6,8 @@ import App from './App.jsx'
 import Features from './pages/Features.jsx'
 import RequestDemo from './pages/RequestDemo.jsx'
 import ContactSales from './pages/ContactSales.jsx'
+import PrivacyPolicy from './pages/PrivacyPolicy.jsx'
+import TermsOfService from './pages/TermsOfService.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -15,6 +17,8 @@ createRoot(document.getElementById('root')).render(
         <Route path="/features" element={<Features />} />
         <Route path="/request-demo" element={<RequestDemo />} />
         <Route path="/contact-sales" element={<ContactSales />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-of-service" element={<TermsOfService />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,

@@ -1,28 +1,31 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import crmImage from "./assets/cheap-crm-software.webp";
 import improvecustexp from "./assets/customer_experience.png";
 import improveopeff from "./assets/improve_operational_efficiency.webp";
 import incbusgrow from "./assets/increase_business_growth.webp";
+import logo1 from "./assets/logo1.png";
+import { showConfirmDialog, showInfoAlert, showToast } from "./utils/sweetAlerts";
 
-const Navbar = () => {
+const Navbar = ({ onGetStarted }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <nav className="sticky top-0 z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="flex-shrink-0 flex items-center gap-2">
-            <span className="material-icons text-primary text-3xl">shopping_cart</span>
-            <Link to="/" className="font-bold text-xl tracking-tight text-gray-900 dark:text-white">
+            <div className="flex-shrink-0 flex items-center gap-2">
+              <img src={logo1} alt="ByteBazaar Logo" className="h-12 w-auto" />
+            {/* <Link to="/" className="font-bold text-xl tracking-tight text-gray-900 dark:text-white">
               Byte<span className="text-primary">Bazaar</span>
-            </Link>
+            </Link> */}
           </div>
           <div className="hidden md:flex space-x-8 items-center">
+          <Link className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium transition" to="/">Home</Link>
             <Link className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium transition" to="/features">Features</Link>
-            <a className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium transition" href="#why-us">Why Us</a>
-            <Link className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium transition" to="/contact-sales">Contact</Link>
-            <a className="bg-primary hover:bg-secondary text-white px-5 py-2.5 rounded-lg font-semibold transition shadow-md hover:shadow-lg" href="#get-started">Get Started</a>
+            {/* <a className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium transition" href="#why-us">Why Us</a> */} 
+            <Link className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium transition" to="/contact-sales">Contact Us</Link>
+            <a className="bg-primary hover:bg-secondary text-white px-5 py-2.5 rounded-lg font-semibold transition shadow-md hover:shadow-lg cursor-pointer" onClick={onGetStarted}>Get Started</a>
           </div>
           <div className="md:hidden flex items-center">
             <button 
@@ -60,9 +63,11 @@ const Navbar = () => {
                 Contact
               </Link>
               <a 
-                className="bg-primary hover:bg-secondary text-white px-5 py-2.5 rounded-lg font-semibold transition shadow-md hover:shadow-lg text-center" 
-                href="#get-started"
-                onClick={() => setMobileMenuOpen(false)}
+                className="bg-primary hover:bg-secondary text-white px-5 py-2.5 rounded-lg font-semibold transition shadow-md hover:shadow-lg text-center cursor-pointer" 
+                onClick={(e) => {
+                  setMobileMenuOpen(false);
+                  onGetStarted(e);
+                }}
               >
                 Get Started
               </a>
@@ -74,7 +79,7 @@ const Navbar = () => {
   );
 };
 
-const Hero = () => (
+const Hero = ({ onRequestDemo }) => (
   <section className="relative overflow-hidden pt-16 pb-24 lg:pt-32 lg:pb-40">
     <div className="absolute inset-0 -z-10 bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-background-dark"></div>
     <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-primary/10 rounded-full blur-3xl"></div>
@@ -88,10 +93,10 @@ const Hero = () => (
             ByteBazaar is a modern CRM that helps you understand your customers, communicate at scale, and make data-driven decisions, all from one platform.
           </p>
       <div>
-            <Link className="inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-semibold rounded-lg text-white bg-primary hover:bg-secondary shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1" to="/request-demo">
+            <a className="inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-semibold rounded-lg text-white bg-primary hover:bg-secondary shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1 cursor-pointer" onClick={(e) => onRequestDemo(e, 'Hero')}>
               Request Demo 
               <span className="material-icons ml-2">arrow_forward</span>
-            </Link>
+            </a>
           </div>
         </div>
         <div className="relative group">
@@ -213,7 +218,7 @@ const WhyUsSection = () => (
   </section>
 );
 
-const PricingSection = () => (
+const PricingSection = ({ onGetStarted, onRequestDemo, onContactSales }) => (
   <section className="py-20 bg-white dark:bg-background-dark" id="pricing">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="text-center mb-16">
@@ -241,7 +246,7 @@ const PricingSection = () => (
           </ul>
           <a href="#pricing-features" className="text-xs text-primary mb-4 font-medium block hover:underline cursor-pointer">+ 5 more features below</a>
           <p className="text-xs text-gray-500 dark:text-gray-400 mb-4 italic">Best for startups, solo operators, and small businesses.</p>
-          <a className="block w-full text-center py-3 px-4 border border-primary text-primary dark:text-white dark:border-white font-semibold rounded-lg hover:bg-primary hover:text-white dark:hover:bg-white dark:hover:text-primary transition" href="#">Get Started</a>
+          <a className="block w-full text-center py-3 px-4 border border-primary text-primary dark:text-white dark:border-white font-semibold rounded-lg hover:bg-primary hover:text-white dark:hover:bg-white dark:hover:text-primary transition cursor-pointer" onClick={onGetStarted}>Get Started</a>
         </div>
         {/* Professional Plan */}
         <div className="relative bg-white dark:bg-surface-dark border-2 border-primary rounded-2xl p-8 shadow-2xl scale-105 z-10 flex flex-col">
@@ -264,7 +269,7 @@ const PricingSection = () => (
           </ul>
           <a href="#professional-features" className="text-xs text-primary mb-4 font-medium block hover:underline cursor-pointer">+ 5 more features below</a>
           <p className="text-xs text-gray-500 dark:text-gray-400 mb-4 italic">Best for growing teams and high-volume businesses.</p>
-          <Link className="block w-full text-center py-3 px-4 bg-primary text-white font-semibold rounded-lg hover:bg-secondary shadow-md transition" to="/request-demo">Request Demo</Link>
+          <a className="block w-full text-center py-3 px-4 bg-primary text-white font-semibold rounded-lg hover:bg-secondary shadow-md transition cursor-pointer" onClick={(e) => onRequestDemo(e, 'Professional')}>Request Demo</a>
         </div>
         {/* Enterprise Plan */}
         <div className="relative bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-700 rounded-2xl p-8 shadow-lg hover:shadow-xl transition flex flex-col">
@@ -286,7 +291,7 @@ const PricingSection = () => (
           </ul>
           <a href="#enterprise-features" className="text-xs text-primary mb-4 font-medium block hover:underline cursor-pointer">+ 5 more features below</a>
           <p className="text-xs text-gray-500 dark:text-gray-400 mb-4 italic">Best for enterprises, franchises, and regulated businesses.</p>
-          <a className="block w-full text-center py-3 px-4 border border-primary text-primary dark:text-white dark:border-white font-semibold rounded-lg hover:bg-primary hover:text-white dark:hover:bg-white dark:hover:text-primary transition" href="#">Contact Sales</a>
+          <a className="block w-full text-center py-3 px-4 border border-primary text-primary dark:text-white dark:border-white font-semibold rounded-lg hover:bg-primary hover:text-white dark:hover:bg-white dark:hover:text-primary transition cursor-pointer" onClick={onContactSales}>Contact Sales</a>
         </div>
       </div>
 
@@ -544,7 +549,7 @@ const FaqSection = () => (
   </section>
 );
 
-const GetStartedSection = () => (
+const GetStartedSection = ({ onEmailSignup }) => (
   <section className="relative py-24 bg-surface-light dark:bg-surface-dark overflow-hidden" id="get-started">
     <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
       <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 100">
@@ -556,24 +561,24 @@ const GetStartedSection = () => (
       <p className="text-xl text-gray-600 dark:text-gray-300 mb-10 max-w-2xl mx-auto">
         Join the smart retailers and service providers who have reclaimed their time and revenue with ByteBazaar.
       </p>
-      <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-lg mx-auto">
-        <input className="flex-1 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:border-primary focus:ring-primary py-3 px-4 shadow-sm" placeholder="Enter your work email" type="email" />
-        <Link className="bg-primary hover:bg-secondary text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition transform hover:-translate-y-1 whitespace-nowrap text-center" to="/request-demo">
+      <form onSubmit={onEmailSignup} className="flex flex-col sm:flex-row gap-4 justify-center max-w-lg mx-auto">
+        <input className="flex-1 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:border-primary focus:ring-primary py-3 px-4 shadow-sm" placeholder="Enter your work email" type="email" name="email" required />
+        <button type="submit" className="bg-primary hover:bg-secondary text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition transform hover:-translate-y-1 whitespace-nowrap text-center">
           Request Demo 
-        </Link>
-      </div>
+        </button>
+      </form>
     </div>
   </section>
 );
 
-const Footer = () => (
+const Footer = ({ onGetStarted }) => (
   <footer className="bg-white dark:bg-background-dark pt-16 pb-8 border-t border-gray-200 dark:border-gray-800" id="contact">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
         <div className="space-y-4">
           <div className="flex items-center gap-2">
-            <span className="material-icons text-primary text-2xl">shopping_cart</span>
-            <span className="font-bold text-xl text-gray-900 dark:text-white">Byte<span className="text-primary">Bazaar</span></span>
+            <img src={logo1} alt="ByteBazaar Logo" className="h-8 w-auto" />
+            {/* <span className="font-bold text-xl text-gray-900 dark:text-white">Byte<span className="text-primary">Bazaar</span></span> */}
           </div>
           <div className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
             <p className="flex items-center"><span className="material-icons text-base mr-2">phone</span> +254 738 476 283</p>
@@ -586,12 +591,12 @@ const Footer = () => (
         <div>
           <h3 className="font-bold text-gray-900 dark:text-white mb-4">Product / Solutions</h3>
           <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-            <li><Link className="hover:text-primary transition" to="/features#customers-crm">Customers & CRM</Link></li>
-            <li><Link className="hover:text-primary transition" to="/features#orders-delivery">Orders & Delivery</Link></li>
-            <li><Link className="hover:text-primary transition" to="/features#products-inventory">Products & Inventory</Link></li>
-            <li><Link className="hover:text-primary transition" to="/features#staff-task-management">Staff & Task Management</Link></li>
-            <li><Link className="hover:text-primary transition" to="/features#analytics-reports">Analytics & Reports</Link></li>
-            <li><Link className="hover:text-primary transition" to="/features#jobcards-repairs">JobCard & Repairs</Link></li>
+            <li><a className="hover:text-primary transition" href="/features#customers-crm">Customers & CRM</a></li>
+            <li><a className="hover:text-primary transition" href="/features#orders-delivery">Orders & Delivery</a></li>
+            <li><a className="hover:text-primary transition" href="/features#products-inventory">Products & Inventory</a></li>
+            <li><a className="hover:text-primary transition" href="/features#staff-task-management">Staff & Task Management</a></li>
+            <li><a className="hover:text-primary transition" href="/features#analytics-reports">Analytics & Reports</a></li>
+            <li><a className="hover:text-primary transition" href="/features#jobcards-repairs">JobCard & Repairs</a></li>
           </ul>
         </div>
         <div>
@@ -599,8 +604,7 @@ const Footer = () => (
           <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
             <li><a className="hover:text-primary transition" href="#pricing">Pricing</a></li>
             <li><a className="hover:text-primary transition" href="#faq">FAQs</a></li>
-            <li><a className="hover:text-primary transition" href="#">Resources / Blogs</a></li>
-            <li><a className="hover:text-primary transition" href="#">About ByteBazaar</a></li>
+            <li><a className="hover:text-primary transition cursor-pointer" onClick={onGetStarted}>Get Started</a></li>
             <li><Link className="hover:text-primary transition" to="/contact-sales">Contact Us</Link></li>
             <li><Link className="hover:text-primary transition" to="/request-demo">Request a demo</Link></li>
           </ul>
@@ -623,8 +627,8 @@ const Footer = () => (
       <div className="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
         <p className="text-sm text-gray-500 dark:text-gray-500">2026 Byte Bazaar CRM. All rights reserved.</p>
         <div className="flex space-x-6 mt-4 md:mt-0 text-sm text-gray-500 dark:text-gray-500">
-          <a className="hover:text-primary transition" href="#">Privacy Policy</a>
-          <a className="hover:text-primary transition" href="#">Terms of Service</a>
+          <Link className="hover:text-primary transition" to="/privacy-policy">Privacy Policy</Link>
+          <Link className="hover:text-primary transition" to="/terms-of-service">Terms of Service</Link>
         </div>
       </div>
     </div>
@@ -633,6 +637,56 @@ const Footer = () => (
 
 const App = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  // Handler for Get Started button
+  const handleGetStarted = (e) => {
+    e.preventDefault();
+    showConfirmDialog(
+      'Ready to Get Started?',
+      'You will be redirected to the ByteBazaar login page',
+      'Continue',
+      'Not yet'
+    ).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = 'https://bytebazaar.ma3.co.ke/Login';
+      }
+    });
+  };
+
+  // Handler for Request Demo button from pricing
+  const handleRequestDemo = (e, planName) => {
+    e.preventDefault();
+    showInfoAlert(
+      `${planName} Plan Demo`,
+      'Let us show you how ByteBazaar can transform your business operations!'
+    ).then(() => {
+      navigate('/request-demo');
+    });
+  };
+
+  // Handler for Enterprise Contact Sales
+  const handleContactSales = (e) => {
+    e.preventDefault();
+    showInfoAlert(
+      'Enterprise Solutions',
+      'Our sales team will help customize a perfect plan for your organization\'s needs'
+    ).then(() => {
+      navigate('/contact-sales');
+    });
+  };
+
+  // Handler for email signup
+  const handleEmailSignup = (e) => {
+    e.preventDefault();
+    const email = e.target.email?.value;
+    if (email) {
+      showToast('success', 'Thanks! We\'ll reach out soon!');
+      setTimeout(() => {
+        navigate('/request-demo');
+      }, 1500);
+    }
+  };
 
   useEffect(() => {
     // Handle hash scrolling when component mounts or location changes
@@ -645,19 +699,23 @@ const App = () => {
         }
       }, 100);
     }
-  }, [location]);
+  }, [location, navigate]);
 
   return (
     <div className="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-body transition-colors duration-200">
-      <Navbar />
-      <Hero />
+      <Navbar onGetStarted={handleGetStarted} />
+      <Hero onRequestDemo={handleRequestDemo} />
       <SectionWave top />
       <WhyUsSection />
       <SectionWave />
-      <PricingSection />
+      <PricingSection 
+        onGetStarted={handleGetStarted}
+        onRequestDemo={handleRequestDemo}
+        onContactSales={handleContactSales}
+      />
       <FaqSection />
-      <GetStartedSection />
-      <Footer />
+      <GetStartedSection onEmailSignup={handleEmailSignup} />
+      <Footer onGetStarted={handleGetStarted} />
     </div>
   );
 };

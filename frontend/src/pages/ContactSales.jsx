@@ -1,11 +1,74 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm, ValidationError } from '@formspree/react';
+import logo1 from '../assets/logo1.png';
+import 'flag-icons/css/flag-icons.min.css';
+import { showFormSubmissionSuccess, showErrorAlert, showConfirmDialog } from '../utils/sweetAlerts';
 
 const ContactSales = () => {
+  const navigate = useNavigate();
   const [state, handleSubmit] = useForm("mzddbdko");
   const [optIn, setOptIn] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [countryCode, setCountryCode] = useState("+254");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const handleGetStarted = (e) => {
+    e.preventDefault();
+    showConfirmDialog(
+      'Ready to Get Started?',
+      'You will be redirected to the ByteBazaar login page',
+      'Continue',
+      'Not yet'
+    ).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = 'https://bytebazaar.ma3.co.ke/Login';
+      }
+    });
+  };
+
+  const countries = [
+    { code: "+254", flag: "ke", name: "Kenya" },
+    { code: "+1", flag: "us", name: "USA" },
+    { code: "+44", flag: "gb", name: "UK" },
+    { code: "+27", flag: "za", name: "South Africa" },
+    { code: "+256", flag: "ug", name: "Uganda" },
+    { code: "+255", flag: "tz", name: "Tanzania" },
+    { code: "+234", flag: "ng", name: "Nigeria" },
+    { code: "+91", flag: "in", name: "India" },
+    { code: "+86", flag: "cn", name: "China" },
+  ];
+
+  const selectedCountry = countries.find(c => c.code === countryCode);
+
+  useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo(0, 0);
+  }, []);
+
+  // Show SweetAlert on form submission success and redirect
+  useEffect(() => {
+    if (state.succeeded) {
+      showFormSubmissionSuccess(
+        'Thank you!',
+        'Our sales team will get back to you within 24 hours.'
+      ).then(() => {
+        // Redirect to home page after alert is closed or timer expires
+        navigate('/');
+      });
+    }
+  }, [state.succeeded, navigate]);
+
+  // Show error alert if submission fails
+  useEffect(() => {
+    if (state.errors && state.errors.length > 0) {
+      showErrorAlert(
+        'Oops!',
+        'Something went wrong. Please try again or contact us directly.'
+      );
+    }
+  }, [state.errors]);
+
 
   return (
     <div className="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-body min-h-screen flex flex-col">
@@ -14,16 +77,17 @@ const ContactSales = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex-shrink-0 flex items-center gap-2">
-              <span className="material-icons text-primary text-3xl">shopping_cart</span>
-              <Link to="/" className="font-bold text-xl tracking-tight text-gray-900 dark:text-white">
+              <img src={logo1} alt="ByteBazaar Logo" className="h-12 w-auto" />
+              {/* <Link to="/" className="font-bold text-xl tracking-tight text-gray-900 dark:text-white">
                 Byte<span className="text-primary">Bazaar</span>
-              </Link>
+              </Link> */}
             </div>
             <div className="hidden md:flex space-x-8 items-center">
+            <Link className="text-gray-600 dark:text-gray-300 hover:text-primary font-medium transition" to="/">Home</Link>
               <Link className="text-gray-600 dark:text-gray-300 hover:text-primary font-medium transition" to="/features">Features</Link>
-              <Link className="text-gray-600 dark:text-gray-300 hover:text-primary font-medium transition" to="/#why-us">Why Us</Link>
-              <Link className="text-gray-600 dark:text-gray-300 hover:text-primary font-medium transition" to="/contact-sales">Contact</Link>
-              <Link className="bg-primary hover:bg-secondary text-white px-6 py-2 rounded-full font-semibold transition shadow-md" to="/">Get Started</Link>
+              {/* <Link className="text-gray-600 dark:text-gray-300 hover:text-primary font-medium transition" to="/#why-us">Why Us</Link> */}
+              <Link className="text-gray-600 dark:text-gray-300 hover:text-primary font-medium transition" to="/contact-sales">Contact Us</Link> 
+              <a className="bg-primary hover:bg-secondary text-white px-6 py-2 rounded-full font-semibold transition shadow-md cursor-pointer" onClick={handleGetStarted}>Get Started</a>
             </div>
             <div className="md:hidden flex items-center">
               <button 
@@ -46,13 +110,13 @@ const ContactSales = () => {
                 >
                   Features
                 </Link>
-                <Link 
+                <a 
                   className="text-gray-600 dark:text-gray-300 hover:text-primary font-medium transition px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" 
-                  to="/#why-us"
+                  href="/#why-us"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Why Us
-                </Link>
+                </a>
                 <Link 
                   className="text-gray-600 dark:text-gray-300 hover:text-primary font-medium transition px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" 
                   to="/contact-sales"
@@ -60,13 +124,15 @@ const ContactSales = () => {
                 >
                   Contact
                 </Link>
-                <Link 
-                  className="bg-primary hover:bg-secondary text-white px-6 py-2 rounded-full font-semibold transition shadow-md text-center" 
-                  to="/"
-                  onClick={() => setMobileMenuOpen(false)}
+                <a 
+                  className="bg-primary hover:bg-secondary text-white px-6 py-2 rounded-full font-semibold transition shadow-md text-center cursor-pointer" 
+                  onClick={(e) => {
+                    setMobileMenuOpen(false);
+                    handleGetStarted(e);
+                  }}
                 >
                   Get Started
-                </Link>
+                </a>
               </div>
             </div>
           )}
@@ -244,14 +310,54 @@ const ContactSales = () => {
                       <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300" htmlFor="phone">
                         Phone
                       </label>
-                      <input
-                        className="w-full rounded-xl border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:border-primary focus:ring-2 focus:ring-primary py-3 px-4 transition-all"
-                        id="phone"
-                        name="phone"
-                        placeholder="Enter phone number"
-                        required
-                        type="tel"
-                      />
+                      <div className="flex gap-2">
+                        {/* Custom Country Code Dropdown */}
+                        <div className="relative">
+                          <button
+                            type="button"
+                            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                            className="rounded-xl border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:border-primary focus:ring-2 focus:ring-primary py-3 px-4 transition-all min-w-[140px] flex items-center justify-between gap-3"
+                          >
+                            <div className="flex items-center gap-2">
+                              <span className={`fi fi-${selectedCountry?.flag} text-xl`}></span>
+                              <span className="font-medium">{countryCode}</span>
+                            </div>
+                            <span className="material-icons text-base">{isDropdownOpen ? 'expand_less' : 'expand_more'}</span>
+                          </button>
+                          
+                          {isDropdownOpen && (
+                            <div className="absolute z-10 mt-2 min-w-[280px] bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 rounded-xl shadow-xl max-h-80 overflow-y-auto">
+                              {countries.map((country) => (
+                                <button
+                                  key={country.code}
+                                  type="button"
+                                  onClick={() => {
+                                    setCountryCode(country.code);
+                                    setIsDropdownOpen(false);
+                                  }}
+                                  className="w-full px-4 py-3 flex items-center gap-3 hover:bg-primary hover:text-white dark:text-white transition-colors text-left border-b border-gray-100 dark:border-gray-700 last:border-0"
+                                >
+                                  <span className={`fi fi-${country.flag} text-2xl`}></span>
+                                  <span className="font-semibold min-w-[50px]">{country.code}</span>
+                                  <span className="text-base">{country.name}</span>
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                          
+                          {/* Hidden input for form submission */}
+                          <input type="hidden" name="countryCode" value={countryCode} />
+                        </div>
+
+                        <input
+                          className="flex-1 rounded-xl border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:border-primary focus:ring-2 focus:ring-primary py-3 px-4 transition-all"
+                          id="phone"
+                          name="phone"
+                          placeholder="712 345 678"
+                          required
+                          type="tel"
+                        />
+                      </div>
                       <ValidationError
                         prefix="Phone"
                         field="phone"
@@ -281,7 +387,7 @@ const ContactSales = () => {
 
                     {/* Privacy Statement */}
                     <p className="text-xs text-center text-gray-500 dark:text-gray-400">
-                      We value your privacy. To learn more, visit our <a className="text-primary hover:underline font-medium" href="#">Privacy Statement</a>.
+                      We value your privacy. To learn more, visit our <Link className="text-primary hover:underline font-medium" to="/privacy-policy">Privacy Policy</Link>.
                     </p>
 
                     {/* Submit Button */}
@@ -307,8 +413,8 @@ const ContactSales = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-4">
-              <a className="hover:text-primary transition" href="#">Privacy Policy</a>
-              <a className="hover:text-primary transition" href="#">Terms of Service</a>
+              <Link className="hover:text-primary transition" to="/privacy-policy">Privacy Policy</Link>
+              <Link className="hover:text-primary transition" to="/terms-of-service">Terms of Service</Link>
             </div>
             <p className="text-sm text-gray-500 dark:text-gray-500">© 2026 Byte Bazaar CRM. All rights reserved.</p>
           </div>

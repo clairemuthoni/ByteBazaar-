@@ -1,24 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import logo3 from "../assets/logo3.png";
+import logo1 from "../assets/logo1.png";
+import { showSuccessAlert, showConfirmDialog } from '../utils/sweetAlerts';
 
-const Navbar = () => {
+const Navbar = ({ onGetStarted }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <nav className="sticky top-0 z-50 bg-white/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-gray-100 dark:border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="flex-shrink-0 flex items-center gap-2">
-            <span className="material-icons text-primary text-3xl">shopping_cart</span>
-            <Link to="/" className="font-bold text-xl tracking-tight text-gray-900 dark:text-white">
+            <div className="flex-shrink-0 flex items-center gap-2">
+              <img src={logo3} alt="ByteBazaar Logo" className="h-12 w-auto" />
+            {/* <Link to="/" className="font-bold text-xl tracking-tight text-gray-900 dark:text-white">
               Byte<span className="text-primary">Bazaar</span>
-            </Link>
+            </Link> */}
           </div>
           <div className="hidden md:flex space-x-8 items-center">
+          <Link className="text-gray-600 dark:text-gray-300 hover:text-primary font-medium transition" to="/">Home</Link>
             <Link className="text-gray-600 dark:text-gray-300 hover:text-primary font-medium transition" to="/features">Features</Link>
-            <Link className="text-gray-600 dark:text-gray-300 hover:text-primary font-medium transition" to="/#why-us">Why Us</Link>
-            <Link className="text-gray-600 dark:text-gray-300 hover:text-primary font-medium transition" to="/contact-sales">Contact</Link>
-            <Link className="bg-primary hover:bg-secondary text-white px-6 py-2 rounded-full font-semibold transition shadow-md" to="/">Get Started</Link>
+            {/* <Link className="text-gray-600 dark:text-gray-300 hover:text-primary font-medium transition" to="/#why-us">Why Us</Link> */}
+            <Link className="text-gray-600 dark:text-gray-300 hover:text-primary font-medium transition" to="/contact-sales">Contact Us</Link> 
+            <a className="bg-primary hover:bg-secondary text-white px-6 py-2 rounded-full font-semibold transition shadow-md cursor-pointer" onClick={onGetStarted}>Get Started</a>
           </div>
           <div className="md:hidden flex items-center">
             <button 
@@ -41,13 +45,13 @@ const Navbar = () => {
               >
                 Features
               </Link>
-              <Link 
+              <a 
                 className="text-gray-600 dark:text-gray-300 hover:text-primary font-medium transition px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" 
-                to="/#why-us"
+                href="/#why-us"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Why Us
-              </Link>
+              </a>
               <Link 
                 className="text-gray-600 dark:text-gray-300 hover:text-primary font-medium transition px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" 
                 to="/contact-sales"
@@ -55,13 +59,15 @@ const Navbar = () => {
               >
                 Contact
               </Link>
-              <Link 
-                className="bg-primary hover:bg-secondary text-white px-6 py-2 rounded-full font-semibold transition shadow-md text-center" 
-                to="/"
-                onClick={() => setMobileMenuOpen(false)}
+              <a 
+                className="bg-primary hover:bg-secondary text-white px-6 py-2 rounded-full font-semibold transition shadow-md text-center cursor-pointer" 
+                onClick={(e) => {
+                  setMobileMenuOpen(false);
+                  onGetStarted(e);
+                }}
               >
                 Get Started
-              </Link>
+              </a>
             </div>
           </div>
         )}
@@ -71,24 +77,60 @@ const Navbar = () => {
 };
 
 const RequestDemo = () => {
+  const navigate = useNavigate();
+
+  const handleGetStarted = (e) => {
+    e.preventDefault();
+    showConfirmDialog(
+      'Ready to Get Started?',
+      'You will be redirected to the ByteBazaar login page',
+      'Continue',
+      'Not yet'
+    ).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = 'https://bytebazaar.ma3.co.ke/Login';
+      }
+    });
+  };
+
   useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo(0, 0);
+
     // Initialize Calendly widget when component mounts
     const script = document.createElement('script');
     script.src = 'https://assets.calendly.com/assets/external/widget.js';
     script.async = true;
     document.body.appendChild(script);
 
+    // Listen for Calendly event scheduling
+    const handleCalendlyEvent = (e) => {
+      if (e.data.event && e.data.event === 'calendly.event_scheduled') {
+        // Show success alert when demo is booked
+        showSuccessAlert(
+          'Demo Booked! 🎉',
+          'Looking forward to seeing you then!'
+        ).then(() => {
+          // Redirect to home page after alert
+          navigate('/');
+        });
+      }
+    };
+
+    window.addEventListener('message', handleCalendlyEvent);
+
     return () => {
-      // Cleanup: remove script when component unmounts
+      // Cleanup: remove script and event listener when component unmounts
       if (script.parentNode) {
         script.parentNode.removeChild(script);
       }
+      window.removeEventListener('message', handleCalendlyEvent);
     };
-  }, []);
+  }, [navigate]);
 
   return (
     <div className="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-body">
-      <Navbar />
+      <Navbar onGetStarted={handleGetStarted} />
 
       {/* Hero Section */}
       <header className="pt-16 pb-12 lg:pt-24 lg:pb-20 relative overflow-hidden bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-background-dark">
@@ -255,72 +297,50 @@ const RequestDemo = () => {
       {/* FAQ Section */}
       <section className="py-20 bg-white dark:bg-background-dark" id="faq">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">CRM FAQ&apos;s</h2>
+          <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">Frequently Asked Questions</h2>
           <div className="space-y-4">
             <details className="group bg-surface-light dark:bg-surface-dark rounded-xl p-4 [&_summary::-webkit-details-marker]:hidden border border-transparent hover:border-primary/30 transition-colors">
               <summary className="flex cursor-pointer items-center justify-between text-lg font-medium text-gray-900 dark:text-white">
-                Who uses ByteBazaar CRM?
+                Is the demo free?
                 <span className="ml-5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white dark:bg-gray-700 text-primary group-open:bg-primary group-open:text-white transition duration-300">
                   <span className="material-icons text-sm group-open:rotate-180 transition-transform">add</span>
                 </span>
               </summary>
               <div className="mt-4 text-gray-600 dark:text-gray-300 leading-relaxed">
-                We are purpose-built for retail businesses, repair shops, and service providers who need to consolidate order tracking, customer data, and staff management into one reliable system.
+                Yes, the demo is absolutely free with no obligation to purchase. It's designed to help you understand if ByteBazaar is the right fit for your business goals.
               </div>
             </details>
             <details className="group bg-surface-light dark:bg-surface-dark rounded-xl p-4 [&_summary::-webkit-details-marker]:hidden border border-transparent hover:border-primary/30 transition-colors">
               <summary className="flex cursor-pointer items-center justify-between text-lg font-medium text-gray-900 dark:text-white">
-                Is the setup process complicated?
+                Will this be recorded?
                 <span className="ml-5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white dark:bg-gray-700 text-primary group-open:bg-primary group-open:text-white transition duration-300">
                   <span className="material-icons text-sm group-open:rotate-180 transition-transform">add</span>
                 </span>
               </summary>
               <div className="mt-4 text-gray-600 dark:text-gray-300 leading-relaxed">
-                Not at all. We focus on a "plug-and-play" experience. Our intuitive onboarding wizard helps you import data and get operational in minutes, not days.
+                Yes, we record every demo session and send the link to you afterwards so you can share it with your team members who couldn't attend.
               </div>
             </details>
             <details className="group bg-surface-light dark:bg-surface-dark rounded-xl p-4 [&_summary::-webkit-details-marker]:hidden border border-transparent hover:border-primary/30 transition-colors">
               <summary className="flex cursor-pointer items-center justify-between text-lg font-medium text-gray-900 dark:text-white">
-                Do I need an IT team?
+                Do I need to install anything?
                 <span className="ml-5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white dark:bg-gray-700 text-primary group-open:bg-primary group-open:text-white transition duration-300">
                   <span className="material-icons text-sm group-open:rotate-180 transition-transform">add</span>
                 </span>
               </summary>
               <div className="mt-4 text-gray-600 dark:text-gray-300 leading-relaxed">
-                Absolutely not. ByteBazaar is a cloud-based solution built for business owners, not developers. We handle the technical side so you can focus on sales.
+                No. The demo is conducted via Google Meet, which runs in your web browser. There is no software to install to see the demo.
               </div>
             </details>
             <details className="group bg-surface-light dark:bg-surface-dark rounded-xl p-4 [&_summary::-webkit-details-marker]:hidden border border-transparent hover:border-primary/30 transition-colors">
               <summary className="flex cursor-pointer items-center justify-between text-lg font-medium text-gray-900 dark:text-white">
-                Is my business data secure?
+                Can I invite my team?
                 <span className="ml-5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white dark:bg-gray-700 text-primary group-open:bg-primary group-open:text-white transition duration-300">
                   <span className="material-icons text-sm group-open:rotate-180 transition-transform">add</span>
                 </span>
               </summary>
               <div className="mt-4 text-gray-600 dark:text-gray-300 leading-relaxed">
-                Yes. We utilize enterprise-grade encryption and security protocols to ensure your customer lists and financial data are protected around the clock.
-              </div>
-            </details>
-            <details className="group bg-surface-light dark:bg-surface-dark rounded-xl p-4 [&_summary::-webkit-details-marker]:hidden border border-transparent hover:border-primary/30 transition-colors">
-              <summary className="flex cursor-pointer items-center justify-between text-lg font-medium text-gray-900 dark:text-white">
-                What kind of support is available?
-                <span className="ml-5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white dark:bg-gray-700 text-primary group-open:bg-primary group-open:text-white transition duration-300">
-                  <span className="material-icons text-sm group-open:rotate-180 transition-transform">add</span>
-                </span>
-              </summary>
-              <div className="mt-4 text-gray-600 dark:text-gray-300 leading-relaxed">
-                All plans include comprehensive email support. Enterprise users gain access to priority support lines and dedicated onboarding specialists.
-              </div>
-            </details>
-            <details className="group bg-surface-light dark:bg-surface-dark rounded-xl p-4 [&_summary::-webkit-details-marker]:hidden border border-transparent hover:border-primary/30 transition-colors">
-              <summary className="flex cursor-pointer items-center justify-between text-lg font-medium text-gray-900 dark:text-white">
-                Can I manage my entire team here?
-                <span className="ml-5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white dark:bg-gray-700 text-primary group-open:bg-primary group-open:text-white transition duration-300">
-                  <span className="material-icons text-sm group-open:rotate-180 transition-transform">add</span>
-                </span>
-              </summary>
-              <div className="mt-4 text-gray-600 dark:text-gray-300 leading-relaxed">
-                Yes. Assign specific roles and permission levels to each staff member to ensure they have the access they need while keeping sensitive data secure.
+                Absolutely! We encourage you to invite key stakeholders from your operations, management, and staff teams so everyone can see how it works for them.
               </div>
             </details>
           </div>
@@ -334,7 +354,7 @@ const RequestDemo = () => {
           <p className="text-gray-600 dark:text-gray-400 mb-8">
             Explore ByteBazaar features or see how it works in your industry.
           </p>
-          <Link className="inline-flex items-center gap-2 bg-white dark:bg-surface-dark border-2 border-primary text-primary px-8 py-3 rounded-full font-bold hover:bg-primary hover:text-white transition-all" to="/features">
+          <Link className="inline-flex items-center gap-2 bg-primary hover:bg-secondary text-white px-8 py-3 rounded-full font-bold shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1" to="/features">
             View Features
             <span className="material-icons">arrow_forward</span>
           </Link>
@@ -347,8 +367,8 @@ const RequestDemo = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
             <div className="space-y-4">
               <div className="flex items-center gap-2">
-                <span className="material-icons text-primary text-2xl">shopping_cart</span>
-                <span className="font-bold text-xl text-gray-900 dark:text-white">Byte<span className="text-primary">Bazaar</span></span>
+                <img src={logo3} alt="ByteBazaar Logo" className="h-8 w-auto" />
+              {/* <span className="font-bold text-xl text-gray-900 dark:text-white">Byte<span className="text-primary">Bazaar</span></span> */}
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
                 <p className="flex items-center"><span className="material-icons text-base mr-2">phone</span> +254 738 476 283</p>
@@ -359,20 +379,21 @@ const RequestDemo = () => {
             <div>
               <h3 className="font-bold text-gray-900 dark:text-white mb-4">Product / Solutions</h3>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                <li><a className="hover:text-primary transition" href="#">Customers & CRM</a></li>
-                <li><a className="hover:text-primary transition" href="#">Orders & Delivery</a></li>
-                <li><a className="hover:text-primary transition" href="#">Products & Inventory</a></li>
-                <li><a className="hover:text-primary transition" href="#">Staff & Task Management</a></li>
-                <li><a className="hover:text-primary transition" href="#">Analytics & Reports</a></li>
+                <li><a className="hover:text-primary transition" href="/features#customers-crm">Customers & CRM</a></li>
+                <li><a className="hover:text-primary transition" href="/features#orders-delivery">Orders & Delivery</a></li>
+                <li><a className="hover:text-primary transition" href="/features#products-inventory">Products & Inventory</a></li>
+                <li><a className="hover:text-primary transition" href="/features#staff-task-management">Staff & Task Management</a></li>
+                <li><a className="hover:text-primary transition" href="/features#analytics-reports">Analytics & Reports</a></li>
+                <li><a className="hover:text-primary transition" href="/features#jobcards-repairs">JobCard & Repairs</a></li>
               </ul>
             </div>
             <div>
               <h3 className="font-bold text-gray-900 dark:text-white mb-4">Resources & Company</h3>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                <li><Link className="hover:text-primary transition" to="/#pricing">Pricing</Link></li>
-                <li><Link className="hover:text-primary transition" to="/#faq">FAQs</Link></li>
-                <li><a className="hover:text-primary transition" href="#">About ByteBazaar</a></li>
-                <li><a className="hover:text-primary transition" href="#">Contact Us</a></li>
+                <li><a className="hover:text-primary transition" href="/#pricing">Pricing</a></li>
+                <li><a className="hover:text-primary transition" href="/#faq">FAQs</a></li>
+                <li><a className="hover:text-primary transition cursor-pointer" onClick={handleGetStarted}>Get Started</a></li>
+                <li><Link className="hover:text-primary transition" to="/contact-sales">Contact Us</Link></li>
                 <li><Link className="hover:text-primary transition" to="/request-demo">Request a demo</Link></li>
               </ul>
             </div>
@@ -387,8 +408,8 @@ const RequestDemo = () => {
           <div className="border-t border-gray-100 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
             <p>© 2026 Byte Bazaar CRM. All rights reserved.</p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <a className="hover:text-primary transition" href="#">Privacy Policy</a>
-              <a className="hover:text-primary transition" href="#">Terms of Service</a>
+              <Link className="hover:text-primary transition" to="/privacy-policy">Privacy Policy</Link>
+              <Link className="hover:text-primary transition" to="/terms-of-service">Terms of Service</Link>
             </div>
           </div>
         </div>
