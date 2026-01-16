@@ -15,7 +15,9 @@ const Navbar = ({ onGetStarted }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
             <div className="flex-shrink-0 flex items-center gap-2">
-              <img src={logo1} alt="ByteBazaar Logo" className="h-12 w-auto" />
+              <Link to="/" className="flex items-center">
+                <img src={logo1} alt="ByteBazaar Logo" className="h-12 w-auto cursor-pointer" />
+              </Link>
             {/* <Link to="/" className="font-bold text-xl tracking-tight text-gray-900 dark:text-white">
               Byte<span className="text-primary">Bazaar</span>
             </Link> */}
@@ -577,7 +579,9 @@ const Footer = ({ onGetStarted }) => (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
         <div className="space-y-4">
           <div className="flex items-center gap-2">
-            <img src={logo1} alt="ByteBazaar Logo" className="h-8 w-auto" />
+            <Link to="/">
+              <img src={logo1} alt="ByteBazaar Logo" className="h-8 w-auto cursor-pointer" />
+            </Link>
             {/* <span className="font-bold text-xl text-gray-900 dark:text-white">Byte<span className="text-primary">Bazaar</span></span> */}
           </div>
           <div className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
@@ -612,11 +616,11 @@ const Footer = ({ onGetStarted }) => (
         <div>
           <h3 className="font-bold text-gray-900 dark:text-white mb-4">Follow Us</h3>
           <div className="flex space-x-4">
-            <a className="w-10 h-10 rounded-full bg-surface-light dark:bg-surface-dark flex items-center justify-center text-gray-500 hover:text-white hover:bg-primary transition" href="#">
-              <svg className="w-5 h-5" fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path></svg>
+            <a className="w-10 h-10 rounded-full bg-surface-light dark:bg-surface-dark flex items-center justify-center text-gray-500 hover:text-white hover:bg-primary transition" href="https://www.tiktok.com/@bytebazaarcrm?_r=1&_t=ZS-935kfwhRJ3Z" target="_blank" rel="noopener noreferrer">
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
             </a>
             <a className="w-10 h-10 rounded-full bg-surface-light dark:bg-surface-dark flex items-center justify-center text-gray-500 hover:text-white hover:bg-primary transition" href="#">
-              <svg className="w-5 h-5" fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path></svg>
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
             </a>
             <a className="w-10 h-10 rounded-full bg-surface-light dark:bg-surface-dark flex items-center justify-center text-gray-500 hover:text-white hover:bg-primary transition" href="#">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24"><rect height="20" rx="5" ry="5" width="20" x="2" y="2"></rect><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01"></path></svg>

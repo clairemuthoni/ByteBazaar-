@@ -77,7 +77,9 @@ const ContactSales = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex-shrink-0 flex items-center gap-2">
-              <img src={logo1} alt="ByteBazaar Logo" className="h-12 w-auto" />
+              <Link to="/">
+                <img src={logo1} alt="ByteBazaar Logo" className="h-12 w-auto cursor-pointer" />
+              </Link>
               {/* <Link to="/" className="font-bold text-xl tracking-tight text-gray-900 dark:text-white">
                 Byte<span className="text-primary">Bazaar</span>
               </Link> */}

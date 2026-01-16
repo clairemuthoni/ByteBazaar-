@@ -10,11 +10,14 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0 flex items-center gap-2">
-            <img src={logo1} alt="ByteBazaar Logo" className="h-12 w-auto" />
+            <Link to="/">
+              <img src={logo1} alt="ByteBazaar Logo" className="h-12 w-auto cursor-pointer" />
+            </Link>
           </div>
           <div className="hidden md:flex space-x-8 items-center">
             <Link className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium transition" to="/">Home</Link>
             <Link className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium transition" to="/features">Features</Link>
+            <Link className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium transition" to="/contact-sales">Contact Us</Link>
             <a className="bg-primary hover:bg-secondary text-white px-5 py-2.5 rounded-lg font-semibold transition shadow-md hover:shadow-lg" href="#get-started">Get Started</a>
           </div>
           <div className="md:hidden flex items-center">
