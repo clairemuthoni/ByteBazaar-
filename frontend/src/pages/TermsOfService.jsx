@@ -48,6 +48,13 @@ const Navbar = () => {
               >
                 Features
               </Link>
+              <Link 
+                className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium transition px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" 
+                to="/contact-sales"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Contact Us
+              </Link>
               <a 
                 className="bg-primary hover:bg-secondary text-white px-5 py-2.5 rounded-lg font-semibold transition shadow-md hover:shadow-lg text-center" 
                 href="#get-started"

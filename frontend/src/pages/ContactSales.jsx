@@ -107,24 +107,24 @@ const ContactSales = () => {
               <div className="flex flex-col space-y-3">
                 <Link 
                   className="text-gray-600 dark:text-gray-300 hover:text-primary font-medium transition px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" 
+                  to="/"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Home
+                </Link>
+                <Link 
+                  className="text-gray-600 dark:text-gray-300 hover:text-primary font-medium transition px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" 
                   to="/features"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Features
                 </Link>
-                <a 
-                  className="text-gray-600 dark:text-gray-300 hover:text-primary font-medium transition px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" 
-                  href="/#why-us"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Why Us
-                </a>
                 <Link 
                   className="text-gray-600 dark:text-gray-300 hover:text-primary font-medium transition px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" 
                   to="/contact-sales"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Contact
+                  Contact Us
                 </Link>
                 <a 
                   className="bg-primary hover:bg-secondary text-white px-6 py-2 rounded-full font-semibold transition shadow-md text-center cursor-pointer" 

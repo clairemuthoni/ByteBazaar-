@@ -6,7 +6,7 @@ import ProductsInventory from "../assets/products&inventory.webp";
 import StaffTaskManagement from "../assets/staff&taskmanagement.png";
 import AnalyticsReports from "../assets/analytics&reports.png";
 import JobCardsRepairs from "../assets/jobcard&repairs.jpg";
-import logo2 from "../assets/logo2.png";
+import logo1 from "../assets/logo1.png";
 import { showConfirmDialog } from "../utils/sweetAlerts";
 
 const Navbar = ({ onGetStarted }) => {
@@ -18,7 +18,7 @@ const Navbar = ({ onGetStarted }) => {
         <div className="flex justify-between items-center h-16">
             <div className="flex-shrink-0 flex items-center gap-2">
               <Link to="/">
-                <img src={logo2} alt="ByteBazaar Logo" className="h-12 w-auto cursor-pointer" />
+                <img src={logo1} alt="ByteBazaar Logo" className="h-12 w-auto cursor-pointer" />
               </Link>
             {/* <Link to="/" className="font-bold text-xl tracking-tight text-gray-900 dark:text-white">
               Byte<span className="text-primary">Bazaar</span>
@@ -45,6 +45,13 @@ const Navbar = ({ onGetStarted }) => {
         {mobileMenuOpen && (
           <div className="md:hidden pb-4 pt-2">
             <div className="flex flex-col space-y-3">
+            <a 
+                className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium transition px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" 
+                to="/"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Home
+              </a>
               <Link 
                 className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium transition px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" 
                 to="/features"
@@ -52,19 +59,12 @@ const Navbar = ({ onGetStarted }) => {
               >
                 Features
               </Link>
-              <a 
-                className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium transition px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" 
-                href="/#why-us"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Why Us
-              </a>
               <Link 
                 className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium transition px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" 
                 to="/contact-sales"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Contact
+                Contact Us
               </Link>
               <a 
                 className="bg-primary hover:bg-secondary text-white px-5 py-2.5 rounded-lg font-semibold transition shadow-md hover:shadow-lg text-center cursor-pointer" 
@@ -158,7 +158,7 @@ const Footer = ({ onGetStarted }) => (
         <div className="space-y-4">
           <div className="flex items-center gap-2">
             <Link to="/">
-              <img src={logo2} alt="ByteBazaar Logo" className="h-8 w-auto cursor-pointer" />
+              <img src={logo1} alt="ByteBazaar Logo" className="h-8 w-auto cursor-pointer" />
             </Link>
             <span className="font-bold text-xl text-gray-900 dark:text-white">Byte<span className="text-primary">Bazaar</span></span>
           </div>
